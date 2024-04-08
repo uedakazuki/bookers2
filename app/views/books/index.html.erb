@@ -1,0 +1,62 @@
+<div class="container px-5 px-sm-0">
+    <div id="error_explanation">
+        <% if @book.errors.any? %>
+        <h3><%= @book.errors.count %> errors prohibited this obj from being saved:</h3>
+        <ul>
+          <% @book.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+    <div class="row">
+      <%= render 'books/book', user: @user%>
+      <div class="col-md-8 offset-md-1">
+        <h2>Books</h2>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Title</th>
+              <th>Opinion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @books.each do |book| %>
+              <tr>
+                  <td>
+                    <%= link_to user_path(book.user_id) do %>
+                      <%= image_tag book.user.get_profile_image(100,100) %>
+                    <% end %>
+                    </td>
+                  <td>
+                    <%= link_to book_path(book.id) do %>
+                      <%= book.title %>
+                    <% end %>
+                    </td>
+                  <td><%= book.body %></td>
+                <% if book.favorited_by?(current_user) %>
+                <td>
+                  <%= link_to favorites_path(book), method: :delete do %>
+                    <i class="fas fa-heart" style="color: red;"></i>
+                    <%= book.favorites.count %>
+                  <% end %>
+                </td>
+                <% else %>
+                <td>
+                  <%= link_to favorites_path(book), method: :post do %>
+                    <i class="far fa-heart"></i>
+                    <%= book.favorites.count %>
+                  <% end %>
+                </td>
+              <% end %>
+              <td>
+                <%= "コメント数: #{book.book_comments.count}"%>
+              </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
